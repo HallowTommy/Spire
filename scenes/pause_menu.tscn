@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://bhxbbp8mbawqm"]
+
+[ext_resource type="Script" uid="uid://b4ferh1ku5p3s" path="res://scripts/pause_menu.gd" id="1"]
+[ext_resource type="Theme" uid="uid://bw3axbof1evgf" path="res://themes/default_theme.tres" id="theme"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=627718552]
+process_mode = 3
+layer = 50
+script = ExtResource("1")
+
+[node name="Overlay" type="ColorRect" parent="." unique_id=796565771]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Panel" type="PanelContainer" parent="." unique_id=549884706]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -300.0
+offset_right = 280.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("theme")
+
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=1457750468]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Panel/VBox" unique_id=1324817803]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 40
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="Panel/VBox" unique_id=1327897145]
+layout_mode = 2
+
+[node name="SfxRow" type="HBoxContainer" parent="Panel/VBox" unique_id=1701650187]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SfxLabel" type="Label" parent="Panel/VBox/SfxRow" unique_id=2000210653]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "SOUNDS"
+
+[node name="SfxSlider" type="HSlider" parent="Panel/VBox/SfxRow" unique_id=1818560821]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="MusicRow" type="HBoxContainer" parent="Panel/VBox" unique_id=1721215713]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MusicLabel" type="Label" parent="Panel/VBox/MusicRow" unique_id=793037929]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "MUSIC"
+
+[node name="MusicSlider" type="HSlider" parent="Panel/VBox/MusicRow" unique_id=604850053]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="Sep2" type="HSeparator" parent="Panel/VBox" unique_id=1471090916]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="Panel/VBox" unique_id=884764849]
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 28
+text = "RESUME"
+
+[node name="RestartBtn" type="Button" parent="Panel/VBox" unique_id=1540281317]
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "RESTART"
+
+[node name="SettingsBtn" type="Button" parent="Panel/VBox" unique_id=1647527411]
+visible = false
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "SETTINGS"
+
+[node name="MenuBtn" type="Button" parent="Panel/VBox" unique_id=1452786674]
+custom_minimum_size = Vector2(240, 56)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "MENU"
