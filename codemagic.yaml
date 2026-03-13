@@ -1,0 +1,111 @@
+workflows:
+  ios-godot-app-preview:
+    name: iOS Godot 4.6.1 > App Preview (Simulator)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+
+    environment:
+      vars:
+        GODOT_VERSION: "4.6.1-stable"
+        GODOT_TEMPL_VERSION_DIR: "4.6.1.stable"
+        EXPORT_PRESET: "IOS"
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          set -e
+          brew install curl unzip || true
+
+      - name: Download Godot
+        script: |
+          set -e
+          mkdir -p tools
+          cd tools
+
+          curl -L -o godot.zip \
+            https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_macos.universal.zip
+
+          unzip -o godot.zip
+          chmod +x Godot*.app/Contents/MacOS/Godot*
+
+      - name: Install export templates
+        script: |
+          set -e
+          cd tools
+
+          curl -L -o templates.tpz \
+            https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
+
+          TEMPL_DIR="$HOME/Library/Application Support/Godot/export_templates/${GODOT_TEMPL_VERSION_DIR}"
+          mkdir -p "$TEMPL_DIR"
+
+          unzip -o templates.tpz
+          mv templates/* "$TEMPL_DIR/"
+
+      - name: Export iOS project (Xcode)
+        script: |
+          set -e
+          mkdir -p build/ios
+
+          GODOT_BIN=$(find tools -type f -path "*Godot*.app/Contents/MacOS/*" | head -n 1)
+          echo "Godot bin: $GODOT_BIN"
+
+          "$GODOT_BIN" --headless \
+            --path . \
+            --export-release "${EXPORT_PRESET}" \
+            build/ios
+
+          echo "=== After export: build tree ==="
+          find build -maxdepth 5 -print
+
+      - name: Inject ios-webview plugin
+        script: |
+          set -e
+
+          echo "=== Searching for xcodeproj ==="
+          find build -name "*.xcodeproj" -print || true
+
+          XCODEPROJ=$(find build -name "*.xcodeproj" | head -n 1)
+
+          if [ -z "$XCODEPROJ" ]; then
+            echo "ERROR: .xcodeproj not found after export"
+            echo "=== build contents ==="
+            find build -maxdepth 5 -print || true
+            exit 1
+          fi
+
+          echo "Using Xcode project: $XCODEPROJ"
+          bash addons/ios-webview/ios/inject.sh "$XCODEPROJ"
+          
+      - name: Build for iOS Simulator (force x86_64)
+        script: |
+          set -e
+
+          XCODEPROJ=$(find build -name "*.xcodeproj" | head -n 1)
+          echo "Using project: $XCODEPROJ"
+
+          SCHEME=$(xcodebuild -list -project "$XCODEPROJ" \
+            | awk '/Schemes:/{flag=1;next} flag && NF{print; exit}' \
+            | xargs)
+
+          echo "Using scheme: $SCHEME"
+
+          xcodebuild \
+            -project "$XCODEPROJ" \
+            -scheme "$SCHEME" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            ARCHS=x86_64 \
+            EXCLUDED_ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Collect .app
+        script: |
+          mkdir -p simulator_artifacts
+          find ~/Library/Developer/Xcode/DerivedData -name "*.app" -type d -exec cp -R {} simulator_artifacts/ \;
+
+    artifacts:
+      - simulator_artifacts/*.app
