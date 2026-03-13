@@ -8,7 +8,7 @@ workflows:
       vars:
         GODOT_VERSION: "4.6.1-stable"
         GODOT_TEMPL_VERSION_DIR: "4.6.1.stable"
-        EXPORT_PRESET: "IOS"
+        EXPORT_PRESET: "iOS"
 
     scripts:
       - name: Install dependencies
@@ -47,12 +47,8 @@ workflows:
           set -e
           mkdir -p build/ios
 
-          echo "=== export_presets.cfg ==="
-          cat export_presets.cfg || true
-
           GODOT_BIN=$(find tools -type f -path "*Godot*.app/Contents/MacOS/*" | head -n 1)
           echo "Godot bin: $GODOT_BIN"
-          echo "Using export preset: ${EXPORT_PRESET}"
 
           "$GODOT_BIN" --headless \
             --path . \
