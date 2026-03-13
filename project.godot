@@ -29,6 +29,7 @@ DebugManager="*res://scripts/autoload/debug_manager.gd"
 
 window/size/viewport_width=750
 window/size/viewport_height=1334
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_width"
 window/handheld/orientation=1
