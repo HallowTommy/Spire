@@ -52,8 +52,6 @@ var _fade_rect: ColorRect
 
 const SAVE_PATH := "user://save.cfg"
 
-WebView.open("https://example.com")
-
 func _ready():
 	_load_data()
 	_fade_layer = CanvasLayer.new()
