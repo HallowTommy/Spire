@@ -24,6 +24,7 @@ WorldThemes="*res://scripts/autoload/world_themes.gd"
 GameManager="*res://scripts/autoload/game_manager.gd"
 SoundManager="*res://scripts/autoload/sound_manager.gd"
 DebugManager="*res://scripts/autoload/debug_manager.gd"
+Webview="*uid://bapl8olh78fm2"
 
 [display]
 
